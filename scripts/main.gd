@@ -23,6 +23,8 @@ var elapsed: float = 0.0
 var level: int = 1
 var coins: int = 100
 var stars: int = 0
+var contribution: int = 0
+var reputation: int = 100
 var obtained: Dictionary = {}
 var chests: Dictionary = {}
 var cashier_index: int = 0
@@ -64,19 +66,19 @@ var music: AudioStreamPlayer
 
 
 const LEVEL_NAMES := [
-    "La plaza de los tributos",
-    "El camino hacia el RUC",
-    "Un negocio responsable",
-    "El reto del IGV",
-    "Festival del emprendedor"
+    "Sierra: ¿Para qué sirven los tributos?",
+    "Costa: El camino hacia el RUC",
+    "Costa: Pide tu comprobante",
+    "Costa: Asesoría y reto del IGV",
+    "Selva: Festival del emprendedor"
 ]
 
 var buildings: Array = [
-    {"pos": Vector2(230, 200), "tex": "sunat", "title": "ORIENTACION SUNAT", "stage": 1},
-    {"pos": Vector2(1145, 200), "tex": "registro", "title": "PUNTO DE REGISTRO", "stage": 2},
-    {"pos": Vector2(235, 836), "tex": "tienda", "title": "BODEGA DE ROSA", "stage": 3},
+    {"pos": Vector2(230, 200), "tex": "sunat", "title": "ORIENTACION SUNAT (HUANUCO)", "stage": 1},
+    {"pos": Vector2(1145, 200), "tex": "registro", "title": "REGISTRO RUC Y ADUANAS", "stage": 2},
+    {"pos": Vector2(235, 836), "tex": "tienda", "title": "BODEGA DE ROSA Y JUAN", "stage": 3},
     {"pos": Vector2(1135, 836), "tex": "contaduria", "title": "ASESORIA CONTABLE", "stage": 4},
-    {"pos": Vector2(1530, 475), "tex": "municipio", "title": "FESTIVAL", "stage": 5}
+    {"pos": Vector2(1530, 475), "tex": "municipio", "title": "FESTIVAL AMAZONICO", "stage": 5}
 ]
 var npcs: Array = [
     {"id": "mara", "name": "María", "role": "Compañera guía", "pos": Vector2(360, 491), "stage": 1},
@@ -215,6 +217,9 @@ func _input(event: InputEvent) -> void:
             elif Rect2(515, 298, 258, 93).has_point(event.position):
                 choose_cashier(1)
             return
+        if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and mode == "message":
+            advance_message()
+            return
         if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and mode == "select":
             for i in range(3):
                 if Rect2(168 + i * 219, 211, 194, 215).has_point(event.position):
@@ -294,17 +299,7 @@ func _input(event: InputEvent) -> void:
             mode = ""
     elif mode == "message":
         if code in [KEY_ENTER, KEY_KP_ENTER, KEY_SPACE, KEY_E, KEY_ESCAPE]:
-            var next_event: String = dialog_next
-            dialog_next = ""
-            mode = ""
-            if next_event == "cash":
-                start_cash_game()
-            elif next_event == "igv":
-                start_igv_game()
-            elif next_event == "final":
-                start_final_game()
-            elif next_event == "end":
-                mode = "ending"
+            advance_message()
     elif mode == "quiz":
         if code in [KEY_1, KEY_KP_1]:
             choose_answer(0)
@@ -335,17 +330,21 @@ func interact() -> void:
         if int(ob["level"]) == level and not obtained.has(ob["id"]) and player.distance_to(ob["pos"]) < 61.0:
             obtained[ob["id"]] = true
             coins += 10
+            contribution += 10
+            reputation += 2
             play_sound("pickup")
             save_game()
-            open_message("¡OBJETO ENCONTRADO!", "%s. Ganaste 10 monedas. %s" % [ob["name"], objective()], "")
+            open_message("¡OBJETO ENCONTRADO!", "%s. Ganaste +10 Monedas y aportaste S/ 10 al Fondo Comunal. %s" % [ob["name"], objective()], "")
             return
     for chest in bonus_chests:
         if not chests.has(chest["id"]) and player.distance_to(chest["pos"]) < 61.0:
             chests[chest["id"]] = true
             coins += 25
+            contribution += 25
+            reputation += 5
             play_sound("pickup")
             save_game()
-            open_message("COFRE DE CULTURA TRIBUTARIA", "Encontraste 25 monedas extra. Dato: la educacion tributaria ayuda a comprender por que es importante financiar los servicios publicos.", "")
+            open_message("COFRE DE CULTURA TRIBUTARIA", "Encontraste 25 monedas y sumaste S/ 25 al Fondo de Huánuco. Dato: la educación tributaria permite financiar hospitales, escuelas y pistas.", "")
             return
     var nearest: Dictionary = {}
     var dist := 82.0
@@ -424,6 +423,26 @@ func open_message(title: String, content: String, next_event: String) -> void:
     dialog_body = content
     dialog_next = next_event
 
+func advance_message() -> void:
+    var next_event: String = dialog_next
+    dialog_next = ""
+    mode = ""
+    if next_event == "cash":
+        start_cash_game()
+    elif next_event == "igv":
+        start_igv_game()
+    elif next_event == "final":
+        start_final_game()
+    elif next_event == "end":
+        mode = "ending"
+    elif next_event == "scene1_maria":
+        open_quiz("MARÍA · ¿ACEPTAS LA MISIÓN TRIBUTO?",
+            "¡Hola! Soy María. Como ves, Villa Esperanza tiene pistas con huecos y la escuela necesita mejoras. ¡Pero tú puedes ayudar a cambiarlos con tus decisiones!\n\n¿Aceptas la Misión Tributo?",
+            ["¡Acepto la Misión! Vamos a transformar la ciudad", "Ahora no..."],
+            0,
+            "¡Gran actitud! Cada comprobante que exigimos y cada tributo pagado ayuda a financiar bienes y servicios públicos para todos.",
+            "accept_mission")
+
 func open_quiz(title: String, question: String, options: Array, correct: int, explanation: String, action: String) -> void:
     mode = "quiz"
     quiz_title = title
@@ -439,14 +458,22 @@ func choose_answer(index: int) -> void:
         return
     if index != quiz_answer:
         play_sound("wrong")
-        quiz_error = "Aun no. Piensa en la situacion y vuelve a intentarlo."
+        if quiz_action == "accept_mission":
+            quiz_error = "¡Vamos! La escuela y las pistas no se van a reparar solas. ¡Te necesitamos como aliado tributario!"
+        else:
+            quiz_error = "Aun no. Piensa en la situacion y vuelve a intentarlo."
         return
     play_sound("success")
     coins += 15
     stars += 1
+    contribution += 15
+    reputation += 5
     var action: String = quiz_action
     var information: String = quiz_explanation
-    if action.begins_with("finish_"):
+    if action == "accept_mission":
+        save_game()
+        open_message("¡MISIÓN TRIBUTO ACEPTADA!", "¡Sumaste tus primeros S/ 15 al Fondo de la Ciudad y +5 de Reputación!\n\nRecorre la plaza de Villa Esperanza (Huánuco) y descubre cómo los tributos financian la escuela, la posta y las pistas.", "")
+    elif action.begins_with("finish_"):
         complete_level()
         if level == 6:
             open_message("¡FESTIVAL COMPLETADO!", information + " ¡Has terminado la aventura y recibido tu reconocimiento!", "end")
@@ -591,6 +618,8 @@ func save_game() -> void:
         "level": level,
         "coins": coins,
         "stars": stars,
+        "contribution": contribution,
+        "reputation": reputation,
         "x": player.x,
         "y": player.y,
         "obtained": obtained,
@@ -620,6 +649,8 @@ func load_game() -> void:
     level = clampi(int(data.get("level", 1)), 1, 6)
     coins = int(data.get("coins", 100))
     stars = int(data.get("stars", 0))
+    contribution = int(data.get("contribution", 0))
+    reputation = int(data.get("reputation", 100))
     player = Vector2(float(data.get("x", 480)), float(data.get("y", 655)))
     obtained = data.get("obtained", {})
     chests = data.get("chests", {})
@@ -637,6 +668,8 @@ func reset_game() -> void:
     level = 1
     coins = 100
     stars = 0
+    contribution = 0
+    reputation = 100
     player = Vector2(480, 655)
     obtained.clear()
     chests.clear()
@@ -690,8 +723,19 @@ func draw_world() -> void:
             if xx >= 24 and xx <= 34 and yy >= 2 and yy <= 11:
                 key = "paving"
             draw_texture_rect(tex[key], Rect2(xx * 32, yy * 32, 32, 32), false)
+            # Tintado de ambiente segun la region (Sierra, Costa, Selva)
+            if center.x < 720.0:
+                draw_rect(Rect2(xx * 32, yy * 32, 32, 32), Color(0.12, 0.42, 0.18, 0.08))
+            elif center.x < 1380.0:
+                draw_rect(Rect2(xx * 32, yy * 32, 32, 32), Color(0.85, 0.72, 0.38, 0.16))
+            else:
+                draw_rect(Rect2(xx * 32, yy * 32, 32, 32), Color(0.05, 0.65, 0.18, 0.16))
             if key == "grass" and (xx * 17 + yy * 29) % 41 == 7:
                 draw_texture(tex["flower"], Vector2(xx * 32, yy * 32))
+    # Letreros de regiones de Tributa Peru
+    world_label(Vector2(220, 565), "--- REGION SIERRA: VILLA ESPERANZA (HUANUCO) ---", Color("#274e30"), 15)
+    world_label(Vector2(840, 565), "--- REGION COSTA: MERCADO Y ADUANAS ---", Color("#6d521d"), 15)
+    world_label(Vector2(1420, 565), "--- REGION SELVA: FERIA EMPRENDEDORA ---", Color("#195828"), 15)
     # Plaza central, fuente e indicaciones.
     draw_rect(Rect2(853, 216, 115, 80), Color("#88b9c3"))
     draw_rect(Rect2(863, 226, 95, 60), Color("#55b4cc"))
@@ -792,16 +836,29 @@ func multiline(where: Vector2, content: String, size: int, max_chars: int, line_
     for i in range(mini(ls.size(), max_lines)):
         write_text(where + Vector2(0, i * line_height), str(ls[i]), size, color)
 
+func current_region() -> String:
+    if player.x < 720.0:
+        return "SIERRA · HUÁNUCO"
+    elif player.x < 1380.0:
+        return "COSTA · ADUANAS Y COMERCIO"
+    else:
+        return "SELVA · FERIA DEL EMPRENDEDOR"
+
 func draw_hud() -> void:
-    panel(Rect2(12, 12, 551, 112), NAVY, GOLD)
-    write_text(Vector2(27, 38), "TRIBUTA PERU  /  " + hero.to_upper(), 21, GOLD)
+    panel(Rect2(12, 12, 516, 122), NAVY, GOLD)
+    write_text(Vector2(27, 36), "TRIBUTA PERÚ  /  " + hero.to_upper(), 20, GOLD)
+    write_text(Vector2(245, 36), "📍 " + current_region(), 14, Color("#88ddff"))
     var level_text := "AVENTURA COMPLETA" if level > 5 else "NIVEL %d  ·  %s" % [level, LEVEL_NAMES[level - 1]]
-    write_text(Vector2(27, 65), level_text, 17, Color("#ffffff"))
-    multiline(Vector2(27, 91), objective(), 15, 59, 18, Color("#c9e9e3"), 2)
-    panel(Rect2(575, 12, 164, 55), NAVY, GOLD)
-    draw_texture_rect(tex["coin"], Rect2(584, 23, 25, 25), false)
-    write_text(Vector2(614, 44), str(coins), 21, CREAM)
-    write_text(Vector2(669, 43), "★ %d" % stars, 19, GOLD)
+    write_text(Vector2(27, 63), level_text, 16, Color("#ffffff"))
+    multiline(Vector2(27, 90), objective(), 14, 57, 18, Color("#c9e9e3"), 2)
+
+    # 3 CONTADORES OFICIALES DEL GDD
+    panel(Rect2(538, 12, 202, 122), NAVY, GOLD)
+    draw_texture_rect(tex["coin"], Rect2(548, 22, 20, 20), false)
+    write_text(Vector2(576, 38), "Monedas: %d" % coins, 15, CREAM)
+    write_text(Vector2(548, 70), "🏛 Fondo: S/ %d" % contribution, 15, GREEN)
+    write_text(Vector2(548, 102), "★ Reputación: %d pts" % reputation, 15, GOLD)
+
     panel(Rect2(750, 12, 198, 147), NAVY, GOLD)
     write_text(Vector2(762, 32), "MINIMAPA", 14, GOLD)
     var mr := Rect2(763, 41, 172, 107)
@@ -819,8 +876,8 @@ func draw_hud() -> void:
     panel(Rect2(14, 505, 682, 27), NAVY, Color("#5e8299"), 1)
     write_text(Vector2(25, 524), "WASD: moverse    E: hablar    J: diario    H: pista    K: guardar    ESC: pausa", 14, CREAM)
     if delivery_active and mode != "title":
-        panel(Rect2(576, 76, 164, 44), NAVY, GOLD)
-        write_text(Vector2(588, 103), "ENTREGA: %ds" % int(ceil(delivery_seconds)), 16, GOLD)
+        panel(Rect2(538, 140, 202, 34), NAVY, GOLD)
+        write_text(Vector2(548, 163), "ENTREGA: %ds" % int(ceil(delivery_seconds)), 15, GOLD)
 
 func dim() -> void:
     draw_rect(Rect2(0, 0, SW, SH), Color(0.04, 0.10, 0.18, 0.78))
@@ -917,7 +974,12 @@ func select_hero(index: int) -> void:
     mode = ""
     save_game()
     play_sound("success")
-    open_message("¡HOLA, " + hero.to_upper() + "!", "Bienvenido a Villa Emprende. Explora la ciudad, recoge documentos y visita a María frente a la oficina azul. Habla con Juan en la plaza para descubrir retos extra.", "")
+    start_scene_1()
+
+func start_scene_1() -> void:
+    open_message("ESCENA 1 · PLAZA DE VILLA ESPERANZA", 
+        "Plaza de Villa Esperanza (Huánuco). Pistas con baches y la escuela necesita reparaciones.\n\nLUIS: Don Juan, una gaseosa y unas galletas, por favor.\nJUAN: Son cinco soles, Luis. Aquí tienes.\n\n[Luis paga y se va sin pedir comprobante. Juan guarda el dinero en un cajón sin anotar nada. María observa desde la puerta de la bodega...]", 
+        "scene1_maria")
 
 func draw_select() -> void:
     dim()
