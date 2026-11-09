@@ -1,0 +1,92 @@
+TRIBUTA PERÚ — LA AVENTURA DE LOS TRES AMIGOS
+==============================================
+VERSION AMPLIADA | RPG 2D EDUCATIVO | GODOT 4.x
+
+QUÉ CONTIENE ESTA VERSIÓN
+- Personajes NUEVOS, basados en los diseños originales del usuario:
+  MARÍA (casaca rosada), JUAN (casaca azul), LUIS (casaca verde y muletas).
+- Pantalla inicial donde eliges el personaje con el que vas a jugar.
+- Animación de caminar en cuatro direcciones (3 fotogramas por dirección).
+- Ciudad con cinco zonas y cinco niveles de educación tributaria.
+- Recoger documentos, monedas y cofres, hablar con personajes, y explorar.
+- NUEVO: Club de Retos de Juan, en la plaza central.
+- NUEVO: Memoria tributaria de seis cartas (3 parejas).
+- NUEVO: Entrega express de folleto (misión opcional con temporizador).
+- NUEVO: Minijuego interactivo de tienda (boleta versus factura).
+- NUEVO: Diario de misiones, aprendizajes y actividades completadas.
+- NUEVO: Melodía original generada para esta demo; tecla M para silenciar.
+- Guardado local automático y manual. No necesita internet.
+
+PASOS PARA ABRIRLO
+1. Descomprime el ZIP COMPLETO en una carpeta distinta del proyecto anterior.
+2. Abre Godot 4 (versión estándar de Windows, no .NET).
+3. Administrador de proyectos > IMPORTAR > seleccionar project.godot.
+4. Clic en IMPORTAR Y EDITAR.
+5. Presiona F5 y ENTER para elegir personaje.
+6. Selecciona 1, 2 o 3 (María, Juan o Luis).
+
+CONTROLES
+WASD / flechas       Caminar por el mapa.
+E / ENTER           Interactuar con personas, cofres, documentos.
+1, 2, 3            Seleccionar personaje y responder opciones.
+1 a 6              Voltear las cartas del minijuego de memoria.
+Ratón              Selección en cartas y minijuego de comprobantes.
+J                  Diario de aventura y conceptos aprendidos.
+H                  Ver pista breve sobre la misión principal.
+K                  Guardar partida manualmente.
+M                  Encender / apagar la música.
+ESC                Pausa o salida de un minijuego.
+N (menú inicial)    Comenzar una nueva partida.
+
+RECORRIDO PRINCIPAL
+NIVEL 1: Casa azul, zona superior izquierda. Busca a María / Mara,
+         recoge las tres pistas de la avenida y supera el reto SUNAT.
+NIVEL 2: Oficina violeta, zona superior derecha. Habla con Luis,
+         recoge tres documentos y ordena pasos informativos del RUC.
+NIVEL 3: Tienda naranja, zona inferior izquierda. Habla con Rosa y
+         atiende tres clientes emitiendo boleta o factura.
+NIVEL 4: Consultorio contable verde, zona inferior derecha. Habla con
+         Elena y practica ejemplos de cálculo del IGV.
+NIVEL 5: Festival, extremo derecho del pueblo. Recoge la carpeta en
+         avenida central, habla con Mateo y pasa la prueba final.
+
+RETOS OPCIONALES DEL CLUB
+Busca a Juan junto a la plaza. Si elegiste a Juan como protagonista,
+verás un anfitrión del Club de Retos en ese lugar.
+1 = Memoria tributaria: empareja RUC, IGV y BOLETA.
+2 = Entrega express: lleva un folleto a la oficina de orientación
+    en 65 segundos. El reloj se pausa mientras hay diálogos.
+3 = Salir al mapa. Repetir los retos no duplica premios de memoria.
+
+PERSONAJES / ANIMACIÓN
+Todos los sprite sheets están en assets/heroes/ en formato PNG RGBA.
+Cada archivo maria.png, juan.png, luis.png mide 288 x 384 px.
+División: 3 columnas por 4 filas; cada celda 96 x 96 px.
+- Fila 0: hacia abajo (frente)
+- Fila 1: izquierda
+- Fila 2: derecha
+- Fila 3: hacia arriba (espalda)
+- Columnas 0-2: caminar, parado, caminar.
+El código utiliza las celdas mediante draw_texture_rect_region.
+Puedes cambiar el tamaño de los personajes desde scripts/main.gd.
+
+INFORMACIÓN LEGAL Y EDUCATIVA
+Demo no oficial de uso educativo; NO está desarrollada ni avalada
+por SUNAT. No se deben introducir datos tributarios ni claves reales.
+Los ejemplos y trámites están simplificados y pueden variar según
+caso y normativa. Consulta fuentes oficiales: https://www.gob.pe/sunat
+
+ARCHIVOS PRINCIPALES
+project.godot                 Configuración del proyecto.
+main.tscn                     Escena principal.
+scripts/main.gd               Lógica del mapa, niveles, minijuegos y menús.
+assets/heroes/*.png           Sprites de los tres personajes (PNG RGBA).
+assets/*.png                  Tiles, edificios, objetos, interfaz.
+assets/*.wav                  Música y efectos de sonido.
+VISTA_PREVIA_NUEVA.png        Diseño ilustrativo del juego (no captura real).
+
+VALIDACIÓN
+Este paquete se revisó en cuanto a estructura, recursos y referencias
+estáticas, pero no se ejecutó dentro de Godot en el entorno de creación.
+Si F5 indica un error, comparte una captura que muestre el número de línea
+y el texto del error para corregirlo.
