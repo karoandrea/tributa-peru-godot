@@ -89,10 +89,12 @@ var npcs: Array = [
     {"id": "juan", "name": "Juan", "role": "Club de retos", "pos": Vector2(1065, 493), "stage": 0}
 ]
 var objects: Array = [
-    {"id": "p1", "level": 1, "pos": Vector2(602, 644), "name": "Pista: impuestos", "kind": "paper"},
-    {"id": "p2", "level": 1, "pos": Vector2(795, 650), "name": "Pista: servicios", "kind": "paper"},
-    {"id": "p3", "level": 1, "pos": Vector2(1010, 653), "name": "Pista: contribuyentes", "kind": "paper"},
-    {"id": "d1", "level": 2, "pos": Vector2(1185, 576), "name": "Actividad economica", "kind": "paper"},
+    {"id": "h_escuela", "level": 1, "pos": Vector2(280, 420), "name": "Colegio Leoncio Prado (Escuela)", "kind": "paper", "info": "Educación pública gratuita: carpetas, textos y maestros financiados con el presupuesto tributario nacional."},
+    {"id": "h_posta", "level": 1, "pos": Vector2(620, 410), "name": "Posta Médica de Huánuco", "kind": "paper", "info": "Salud pública: vacunas, medicinas y doctores pagados con los tributos que aportamos entre todos."},
+    {"id": "h_alumbrado", "level": 1, "pos": Vector2(510, 520), "name": "Alumbrado Público de la Plaza", "kind": "paper", "info": "Servicios comunales: iluminación nocturna en las calles de Huánuco para seguridad de las familias."},
+    {"id": "h_pista", "level": 1, "pos": Vector2(360, 650), "name": "Pista y Pavimento (Jr. 2 de Mayo)", "kind": "paper", "info": "Infraestructura vial: pistas asfaltadas sin huecos gracias al financiamiento de obras públicas."},
+    {"id": "h_serenazgo", "level": 1, "pos": Vector2(640, 650), "name": "Serenazgo y Seguridad Ciudadana", "kind": "paper", "info": "Seguridad ciudadana: patrulleros y personal municipal que cuidan el orden en la comunidad."},
+    {"id": "d1", "level": 2, "pos": Vector2(1185, 576), "name": "Actividad económica", "kind": "paper"},
     {"id": "d2", "level": 2, "pos": Vector2(1326, 643), "name": "Documento de identidad", "kind": "paper"},
     {"id": "d3", "level": 2, "pos": Vector2(1198, 770), "name": "Domicilio fiscal", "kind": "paper"},
     {"id": "f1", "level": 5, "pos": Vector2(920, 635), "name": "Carpeta de emprendimiento", "kind": "chest"}
@@ -334,7 +336,12 @@ func interact() -> void:
             reputation += 2
             play_sound("pickup")
             save_game()
-            open_message("¡OBJETO ENCONTRADO!", "%s. Ganaste +10 Monedas y aportaste S/ 10 al Fondo Comunal. %s" % [ob["name"], objective()], "")
+            var desc: String = ob.get("info", "")
+            if desc != "":
+                var msg := "%s\n\n%s\n\n¡Sumaste +S/ 10 al Fondo de Huánuco! (%d/5 servicios descubiertos)" % [ob["name"], desc, count_huanuco_services()]
+                open_message("SERVICIO PÚBLICO DE HUÁNUCO", msg, "")
+            else:
+                open_message("¡OBJETO ENCONTRADO!", "%s. Ganaste +10 Monedas y aportaste S/ 10 al Fondo Comunal. %s" % [ob["name"], objective()], "")
             return
     for chest in bonus_chests:
         if not chests.has(chest["id"]) and player.distance_to(chest["pos"]) < 61.0:
@@ -358,6 +365,13 @@ func interact() -> void:
         return
     toast("Acercate a una persona u objeto y pulsa E")
 
+func count_huanuco_services() -> int:
+    var count := 0
+    for id in ["h_escuela", "h_posta", "h_alumbrado", "h_pista", "h_serenazgo"]:
+        if obtained.has(id):
+            count += 1
+    return count
+
 func count_objects(prefix: String) -> int:
     var count := 0
     for i in range(1, 4):
@@ -379,12 +393,22 @@ func talk_to(id: String) -> void:
                 open_message("¡ENTREGA EXPRESS COMPLETADA!", "El equipo de orientación recibió el folleto educativo. ¡Ganaste 40 monedas y una estrella por compartir información tributaria!", "")
                 return
             if level == 1:
-                if count_objects("p") < 3:
-                    open_message(guide_name, "¡Hola! Aprenderemos juntos para qué sirve la SUNAT. Busca los tres documentos brillantes de la avenida y vuelve conmigo para resolver el primer reto.", "")
+                var c := count_huanuco_services()
+                if c < 5:
+                    open_message(guide_name, "¡Hola! Para entender para qué sirven los tributos, recorre la plaza de Huánuco y descubre los 5 servicios públicos esenciales (llevas %d/5)." % c, "")
                 else:
-                    open_quiz("PRIMER RETO: CONOCE LA SUNAT", "¿Cual de estas es una funcion de la SUNAT?", ["Construir todas las carreteras", "Administrar tributos nacionales", "Vender productos de la tienda"], 1, "La SUNAT es la administracion tributaria y aduanera del Peru. Los tributos contribuyen a financiar bienes y servicios publicos.", "finish_1")
+                    open_quiz("NIVEL 1 · ¿PARA QUÉ SIRVEN LOS TRIBUTOS?",
+                        "LUIS: 'O sea que la escuela donde estudio y la posta médica existen gracias a lo que pagamos entre todos...'\n\nMARÍA: ¡Exacto! ¿Para qué sirven los tributos que aportamos los peruanos?",
+                        [
+                            "1. Para financiar colegios, postas médicas, pistas y seguridad pública.",
+                            "2. Para que las autoridades lo guarden en una caja sin usarlo.",
+                            "3. Para regalar premios únicamente a negocios grandes."
+                        ],
+                        0,
+                        "¡Exacto! Los tributos financian los bienes y servicios públicos de Huánuco y todo el Perú. Cuando no se pide boleta, ese dinero no llega a la comunidad.",
+                        "finish_1")
             else:
-                open_message(guide_name, "¡Buen trabajo! La SUNAT administra los tributos nacionales y realiza funciones aduaneras. Continúa explorando para descubrir otras misiones.", "")
+                open_message(guide_name, "¡Buen trabajo en Huánuco! Ahora dirígete a la zona de comercio para aprender sobre los comprobantes de pago.", "")
         "luis":
             var ruc_guide := "GUÍA DE RUC" if hero == "luis" else "LUIS - COMPAÑERO"
             if level == 2:
@@ -579,9 +603,10 @@ func complete_level() -> void:
 func objective() -> String:
     match level:
         1:
-            if count_objects("p") < 3:
-                return "Busca tres pistas en la avenida (%d/3). Habla con Mara." % count_objects("p")
-            return "¡Tres pistas! Regresa con Mara (edificio azul)."
+            var c := count_huanuco_services()
+            if c < 5:
+                return "Descubre los 5 servicios en la plaza de Huánuco (%d/5)." % c
+            return "¡Los 5 servicios listos! Habla con María en Orientación SUNAT."
         2:
             if count_objects("d") < 3:
                 return "Busca tres fichas cerca del registro (%d/3)." % count_objects("d")
