@@ -1,7 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://regiones/selva/scripts/acceso_menu.gd" id="2_selva"]
 
 [node name="TributaPeru" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_main")
+
+[node name="AccesoSelva" type="CanvasLayer" parent="."]
+script = ExtResource("2_selva")
