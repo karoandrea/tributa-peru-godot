@@ -1,26 +1,42 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; but it can also be edited by text.
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
-config/name="Tributa Peru - La Aventura de los Tres Amigos"
+config/name="Tributa Peru - Aventura del Emprendedor"
+config/description="RPG educativo 2D de cinco niveles sobre cultura tributaria peruana (demo no oficial)"
 run/main_scene="res://main.tscn"
-config/features=PackedStringArray("4.0", "GL Compatibility")
-config/icon="res://assets/logo.png"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+
+RutaT2="*res://scripts/ruta_t2.gd"
 
 [display]
 
 window/size/viewport_width=960
 window/size/viewport_height=540
-window/size/resizable=true
-window/stretch/mode="viewport"
-window/stretch/aspect="keep"
+window/size/window_width_override=1152
+window/size/window_height_override=648
+window/stretch/mode="canvas_items"
+
+[gui]
+
+theme/default_font_size=18
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-textures/canvas_textures/default_texture_filter=0

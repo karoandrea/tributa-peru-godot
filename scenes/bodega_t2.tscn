@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b8h3flhaar4j0"]
+
+[ext_resource type="Script" uid="uid://ntla40pjecvx" path="res://scripts/bodega_t2.gd" id="1"]
+
+[node name="BodegaNivel2" type="Node2D" unique_id=1494782415]
+texture_filter = 1
+script = ExtResource("1")

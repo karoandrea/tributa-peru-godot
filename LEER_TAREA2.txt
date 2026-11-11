@@ -1,0 +1,65 @@
+TRIBUTA PERU - TAREA 2 (BODEGA COSTERA) + CAMINO DESDE PLAZA
+============================================================
+
+CONTENIDO ENTREGADO
+- Se conserva la demo RPG anterior, sus sprites y su mapa.
+- Se recupera project.godot (no estaba incluido en el ZIP de Tres Amigos).
+- Se agrega una escena jugable lateral: scenes/camino_costa.tscn.
+- Se agrega la bodega: scenes/bodega_t2.tscn con TRES minijuegos.
+- Se agrega scripts/ruta_t2.gd con guardado independiente.
+- Se incluye data/comprobantes_tarea2.json con 6 documentos simulados.
+
+COMO PROBAR
+1) Extrae el ZIP y abre Godot 4 Standard.
+2) Importa el archivo project.godot de la carpeta del proyecto.
+3) Ejecuta con F5.
+4) En la pantalla inicial, pulsa F2 para probar inmediatamente la Tarea 2.
+5) Para la transicion normal, termina el nivel 1 de la demo anterior:
+   tras el mensaje de nivel completado, continuar abre el camino costero.
+
+IMPORTANTE SOBRE LA TAREA 1
+La demo anterior NO contiene los cinco servicios publicos solicitados en la
+Tarea 1 de tu trabajo (Escuela, Posta, Alumbrado, Pista y Serenazgo): en cambio
+usa tres pistas sobre SUNAT. Por ello, se mantiene intacto ese nivel y se
+añade una transicion DESDE SU FINAL. Para engancharlo al proyecto exacto de
+Tarea 1 de tu grupo, se necesita la version que contiene esos cinco servicios.
+El enlace que debes invocar al terminar la Plaza es:
+
+    RutaT2.personaje = "juan"  # o "maria" / "luis"
+    get_tree().change_scene_to_file("res://scenes/camino_costa.tscn")
+
+El valor +10 al Fondo de la Tarea 1 no se vuelve a sumar para evitar duplicados.
+
+CONTROLES
+Camino: A/D o flechas, ESPACIO salta, R reinicia, ESC vuelve.
+Bodega: 1/2 para detective, 1 a 6 para memoria, 1/2/3 para compras,
+ENTER continúa; tambien se puede usar el raton.
+
+SECUENCIA
+PLAZA (T1) -> CAMINO COSTERO (saltos y estrellas de mar)
+-> BODEGA (T2): Detectives 60s -> Memoria -> Compra correcta
+-> Pantalla NIVEL 2 COMPLETADO / siguiente etapa SUNAT (T3 pendiente).
+
+REGLAS
+Detectives: 6 comprobantes, 60 segundos de juego efectivo, 4/6 minimo.
++20 por acierto, -5 por fallo. Si falta tiempo, se repite.
+Memoria: 3 parejas, +15 por pareja.
+Compra correcta: 3 clientes, +25 cada respuesta correcta.
+Estrellas de mar: +10 por estrella.
+Los fallos tienen retroalimentacion y posibilidad de reintentar.
+
+DATOS SIMULADOS
+Las cifras de RUC y las boletas/facturas son ficticias. Las tarjetas
+identificadas como 'validas' son SOLO EJEMPLOS CON CAMPOS COMPLETOS.
+No se comprueba autorizacion, emision, estado ni validez oficial ante SUNAT.
+No representan documentos para realizar tramites reales.
+
+FUENTES DE CONSULTA
+Documento del usuario: CONCEPTO 3 NIVELES.docx, paginas 2-4 y 9-10.
+SUNAT / consulta oficial: https://www.gob.pe/7311
+SUNAT / boleta de venta: https://orientacion.sunat.gob.pe/03-boleta-de-venta
+
+ESTADO DE PRUEBAS
+ZIP e integridad de archivos verificados mediante Python. El motor Godot
+no esta disponible para pruebas de ejecucion en este entorno, por lo que se
+requiere abrirlo en Godot 4 y confirmar F5 en Windows.

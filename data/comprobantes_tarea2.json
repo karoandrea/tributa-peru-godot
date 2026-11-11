@@ -1,0 +1,80 @@
+[
+  {
+	"id": "C01",
+	"tipo": "BOLETA ELECTRÓNICA",
+	"emisor": "Bodega Brisa Costera (simulación)",
+	"ruc": "20000000001",
+	"serie": "B001",
+	"numero": "000125",
+	"fecha": "10/11/2026",
+	"detalle": "Agua y galletas",
+	"total": "S/ 12.00",
+	"valido": true,
+	"explicacion": "Contiene RUC del emisor, serie, número correlativo, fecha y total. Datos completos en esta simulación."
+  },
+  {
+	"id": "C02",
+	"tipo": "FACTURA ELECTRÓNICA",
+	"emisor": "Bodega Brisa Costera (simulación)",
+	"ruc": "20000000001",
+	"serie": "F001",
+	"numero": "000083",
+	"fecha": "10/11/2026",
+	"detalle": "Productos para un negocio",
+	"total": "S/ 44.50",
+	"valido": true,
+	"explicacion": "La factura simulada identifica al emisor y tiene serie, correlativo, fecha e importe."
+  },
+  {
+	"id": "C03",
+	"tipo": "BOLETA ELECTRÓNICA",
+	"emisor": "Bodega Brisa Costera (simulación)",
+	"ruc": "20000000001",
+	"serie": "B001",
+	"numero": "000126",
+	"fecha": "10/11/2026",
+	"detalle": "Cuaderno y lápiz",
+	"total": "S/ 8.00",
+	"valido": true,
+	"explicacion": "La boleta simulada muestra los campos de identificación y numeración necesarios para reconocerla."
+  },
+  {
+	"id": "C04",
+	"tipo": "PAPEL SIN IDENTIFICACIÓN",
+	"emisor": "Venta en la playa",
+	"ruc": "—",
+	"serie": "—",
+	"numero": "—",
+	"fecha": "10/11/2026",
+	"detalle": "Jugo",
+	"total": "S/ 5.00",
+	"valido": false,
+	"explicacion": "Faltan RUC del emisor, serie y número: este papel no permite identificar un comprobante de pago."
+  },
+  {
+	"id": "C05",
+	"tipo": "NOTA MANUSCRITA",
+	"emisor": "Compra rápida",
+	"ruc": "—",
+	"serie": "—",
+	"numero": "—",
+	"fecha": "10/11/2026",
+	"detalle": "Helado",
+	"total": "S/ 6.00",
+	"valido": false,
+	"explicacion": "Aunque indica el producto y el precio, no muestra RUC ni numeración del comprobante."
+  },
+  {
+	"id": "C06",
+	"tipo": "RECIBO INCOMPLETO",
+	"emisor": "Puesto del malecón",
+	"ruc": "—",
+	"serie": "—",
+	"numero": "—",
+	"fecha": "10/11/2026",
+	"detalle": "Gorra",
+	"total": "S/ 20.00",
+	"valido": false,
+	"explicacion": "No contiene RUC del vendedor ni serie y número. No debe confundirse con un comprobante válido."
+  }
+]

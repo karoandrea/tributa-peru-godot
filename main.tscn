@@ -1,7 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cm7ex507ygcfe"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://brv0oai82kxwu" path="res://scripts/main.gd" id="1_main"]
 
-[node name="TributaPeru" type="Node2D"]
+[node name="TributaPeru" type="Node2D" unique_id=190045831]
 texture_filter = 1
 script = ExtResource("1_main")
