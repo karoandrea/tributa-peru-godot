@@ -1,0 +1,80 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxkfn28r5ruhq"]
+
+[ext_resource type="Script" path="res://scripts/fin.gd" id="1_fgokw"]
+[ext_resource type="FontFile" uid="uid://xrcwao6vpbak" path="res://fonts/kenvector_future.ttf" id="1_hjnbu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8xemg"]
+bg_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[node name="Victoria" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fgokw")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.74902, 0.513726, 0.376471, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer"]
+custom_minimum_size = Vector2(720, 360)
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_hjnbu")
+theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/bold_font_size = 2
+bbcode_enabled = true
+text = "[center][wave]Ganaste :)!!![/wave][/center]"
+
+[node name="104493" type="VScrollBar" parent="CenterContainer/RichTextLabel"]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 1.0
+
+[node name="53761" type="VScrollBar" parent="CenterContainer/RichTextLabel"]
+visible = false
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+max_value = 80.0
+step = 1.0
+page = 80.0
+
+[node name="Motivo" type="Label" parent="."]
+layout_mode = 1
+offset_left = 458.0
+offset_top = 253.0
+offset_right = 695.0
+offset_bottom = 276.0
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Boton" type="Button" parent="."]
+layout_mode = 2
+offset_left = 479.0
+offset_top = 400.0
+offset_right = 674.0
+offset_bottom = 429.0
+theme_override_fonts/font = ExtResource("1_hjnbu")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/hover = SubResource("StyleBoxFlat_8xemg")
+text = "Jugar de nuevo"

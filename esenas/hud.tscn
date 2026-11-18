@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmug8fbhk6bm6"]
+
+[ext_resource type="Script" path="res://scripts/hud_script.gd" id="1_8klqq"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_8klqq")
+
+[node name="Oscuro" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Etiqueta" type="Label" parent="."]
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 133.0
+offset_bottom = 70.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+
+[node name="Mensaje" type="Label" parent="."]
+offset_left = 461.0
+offset_top = 248.0
+offset_right = 659.0
+offset_bottom = 346.0
+scale = Vector2(0.953155, 1.12347)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
